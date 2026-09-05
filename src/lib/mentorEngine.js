@@ -1,13 +1,17 @@
 // Gemini-Powered Project Audit, Academic Evaluator & Viva Defense Engine
 // Performs deep repository analysis, technical & academic health scoring, and viva interrogation
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY || "";
-const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
+const GEMINI_MODELS = [
+  "gemini-3.7-flash",
+  "gemini-3.6-flash",
+  "gemini-flash-latest",
+  "gemini-3.5-flash"
+];
 
 async function callGemini(contents, systemInstruction = "") {
-  const apiKey = GEMINI_API_KEY;
+  const apiKey = localStorage.getItem('gemini_api_key') || import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY || "";
   if (!apiKey) {
-    throw new Error("GEMINI_API_KEY not found in environment variables.");
+    throw new Error("GEMINI_API_KEY not configured. Please enter your Gemini API key in settings.");
   }
 
   const payload = {
@@ -25,27 +29,38 @@ async function callGemini(contents, systemInstruction = "") {
     };
   }
 
-  const response = await fetch(`${GEMINI_API_URL}?key=${apiKey}`, {
-    method: "POST",
-    headers: { 
-      "Content-Type": "application/json",
-      "X-goog-api-key": apiKey
-    },
-    body: JSON.stringify(payload)
-  });
+  let lastError = null;
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Gemini API error (${response.status}): ${errorText}`);
+  for (const model of GEMINI_MODELS) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "X-goog-api-key": apiKey
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        continue;
+      }
+
+      const data = await response.json();
+      let textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!textOutput) {
+        continue;
+      }
+
+      textOutput = textOutput.replace(/^```json/, "").replace(/```$/, "").trim();
+      return JSON.parse(textOutput);
+    } catch (err) {
+      lastError = err;
+    }
   }
 
-  const data = await response.json();
-  const textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!textOutput) {
-    throw new Error("Empty response received from Gemini.");
-  }
-
-  return JSON.parse(textOutput);
+  throw lastError || new Error("Failed to process with Gemini API across all model endpoints.");
 }
 
 /**
@@ -246,8 +261,8 @@ ${repoData.readme || "NO README PRESENT"}
  * 4. Grounded Mentor Chat Assistant
  */
 export async function sendMentorChatMessage(messages, projectContext, repoData, auditResults) {
-  const apiKey = GEMINI_API_KEY;
-  if (!apiKey) throw new Error("GEMINI_API_KEY missing");
+  const apiKey = localStorage.getItem('gemini_api_key') || import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY || "";
+  if (!apiKey) throw new Error("GEMINI_API_KEY missing. Please configure your key in settings.");
 
   const systemInstruction = `
 You are Problify AI Project Mentor — an elite senior software architect and university professor.
@@ -286,16 +301,24 @@ RULES FOR YOUR RESPONSES:
     }
   };
 
-  const res = await fetch(`${GEMINI_API_URL}?key=${apiKey}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  });
+  for (const model of GEMINI_MODELS) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
 
-  if (!res.ok) {
-    throw new Error(`Mentor API error: ${res.statusText}`);
+      if (!res.ok) continue;
+
+      const data = await res.json();
+      const answer = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (answer) return answer;
+    } catch {
+      // try next model
+    }
   }
 
-  const data = await res.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response received.";
+  throw new Error("Unable to reach Gemini models for mentor chat.");
 }
