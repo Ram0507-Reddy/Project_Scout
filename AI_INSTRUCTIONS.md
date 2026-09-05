@@ -1,41 +1,40 @@
-# 🤖 AI CO-PILOT INSTRUCTIONS (PROMPTWARS HACKATHON)
+# AI Co-Pilot Instructions (Project Scout)
 
-> **Context**: This workspace is dedicated to the **PromptWars X Parul University – CSE AIML Edition** hackathon.
+> **Context**: This workspace is dedicated to **Project Scout**, an AI-powered project discovery, repository health, and viva defense engine.
 > **Participant**: Shriram Reddy (shriramreddyofficial0507@gmail.com)
-> **Date**: September 5, 2026 | Mode: Offline / On-campus
+> **Repository**: https://github.com/Ram0507-Reddy/Project_Scout
+> **Live Demo**: https://projectscout-ai.web.app
 
 ---
 
-## 🎯 Primary Directives for AI Assistants
+## 1. Primary Directives for AI Assistants
 
-When the user provides the surprise problem statement or instructions:
+### A. Speed & Execution First
+- Architect an end-to-end working MVP with resilient multi-tier fallbacks.
+- Prioritize core AI value proposition: Multimodal Gemini Vision, unconstrained domain classification, grounded repository interrogation, and live 10-point documentation auditing.
+- Ensure both frontend and client-side ingestion engines work cleanly out-of-the-box.
 
-### 1. Speed & Execution First
-- Architect an end-to-end working MVP within minutes.
-- Prioritize core AI value proposition: **Innovative prompting, Gemini API integration, multimodal features, agentic loops, or structured reasoning**.
-- Ensure both frontend and backend work cleanly out-of-the-box.
+### B. High-End UI/UX Aesthetic Rules
+- Never build plain/raw HTML or generic unstyled prototypes.
+- Use modern design systems: Sleek Dark Mode, vibrant accents, smooth micro-interactions, responsive flex/grid layouts, clean typography (Inter/Plus Jakarta Sans).
+- Provide visual dashboards, radar charts, streaming response animations, and intuitive control inputs.
+- Maintain a strict zero-emoji policy across all code and documentation.
 
-### 2. High-End UI/UX Aesthetic Rules
-- **Never build plain/raw HTML or generic unstyled prototypes**.
-- Use modern design systems: Sleek Dark Mode / Vibrant Modern Glassmorphism, smooth micro-interactions, responsive flex/grid layouts, clean typography (Inter/Plus Jakarta Sans).
-- Ensure visual dashboards, loaders, streaming response animations, and intuitive control inputs.
+### C. Strict Hackathon Submission Constraints
+- Repo Size < 10 MB: Verify `.gitignore` before every commit so build artifacts, `.venv`, and `node_modules` are never committed.
+- Single Branch: All code must reside on `main`.
+- Public GitHub Repo: Verify repository visibility.
+- Comprehensive Verification: Thoroughly test all routes, modal dialogs, and fallback mechanisms before final submission.
 
-### 3. Strict Hackathon Submission Constraints
-- **Repo Size < 10 MB**: Under no circumstances should `.venv`, `node_modules`, heavy build artifacts, or large media files be staged or committed. Verify `.gitignore` before every commit.
-- **Single Branch**: All code must reside on `main`.
-- **Public GitHub Repo**: Verify that repo visibility instructions are clear.
-- **Max 2 Submissions**: Thoroughly verify and test the deployed app before making the final submission.
+### D. Hosting & Deployment Protocols
+- Frontend: Deployed to Google Firebase Hosting at `https://projectscout-ai.web.app`.
+- Environment Management: Keep `.env.example` updated with clean placeholders; never hardcode raw API keys into git-tracked code.
 
-### 4. Hosting & Deployment Protocols
-- **Frontend / Fullstack**: Prefer zero-config rapid hosting (Vercel, Netlify, Firebase Hosting, GitHub Pages).
-- **Backend / Python APIs**: Deployable on Cloud Run, Render, or Hugging Face Spaces.
-- **Environment Management**: Keep `.env.example` updated with mock placeholders; never hardcode raw API keys in client-side public bundles.
-
-### 5. Documentation Standards
-- Keep `README.md` updated with:
-  1. Catchy Project Name & 1-line punchline
+### E. Documentation Standards
+- Keep `README.md` and `PROJECT_ARCHITECTURE.md` updated with:
+  1. Project Name & Value Proposition
   2. Problem Statement & Solution Overview
-  3. Key Features (Bullet points with bold highlights)
-  4. Architecture Diagram (Mermaid format)
+  3. Key Features
+  4. System Architecture & Mermaid Data Flow Diagrams (DFD)
   5. Tech Stack & Gemini Model details
-  6. Live Demo Link & Setup Instructions
+  6. Live Demo Links & Setup Instructions
