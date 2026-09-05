@@ -50,7 +50,14 @@ export const useAppStore = create((set, get) => ({
   setActiveOpportunity: (opportunity) => set({ activeOpportunity: opportunity }),
 
   // Saved / Bookmarked Projects
-  savedProjects: JSON.parse(localStorage.getItem('project_scout_saved') || '[]'),
+  savedProjects: (() => {
+    try {
+      if (typeof localStorage !== 'undefined') {
+        return JSON.parse(localStorage.getItem('project_scout_saved') || '[]');
+      }
+    } catch {}
+    return [];
+  })(),
   toggleSaveProject: (project) => {
     const saved = get().savedProjects;
     const exists = saved.some((p) => p.id === project.id);
@@ -60,7 +67,11 @@ export const useAppStore = create((set, get) => ({
     } else {
       updated = [{ ...project, savedAt: new Date().toISOString() }, ...saved];
     }
-    localStorage.setItem('project_scout_saved', JSON.stringify(updated));
+    try {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('project_scout_saved', JSON.stringify(updated));
+      }
+    } catch {}
     set({ savedProjects: updated });
   },
 
@@ -129,9 +140,26 @@ export const useAppStore = create((set, get) => ({
   setSavedDrawerOpen: (isOpen) => set({ isSavedDrawerOpen: isOpen }),
   isMentorOpen: false,
   setMentorOpen: (isOpen) => set({ isMentorOpen: isOpen }),
-  apiKey: localStorage.getItem('project_scout_api_key') || import.meta.env.VITE_GEMINI_API_KEY || '',
+  apiKey: (() => {
+    try {
+      if (typeof localStorage !== 'undefined') {
+        const stored = localStorage.getItem('project_scout_api_key');
+        if (stored) return stored;
+      }
+    } catch {}
+    try {
+      if (typeof import.meta !== 'undefined' && import.meta.env) {
+        return import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY || '';
+      }
+    } catch {}
+    return '';
+  })(),
   setApiKey: (key) => {
-    localStorage.setItem('project_scout_api_key', key);
+    try {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('project_scout_api_key', key);
+      }
+    } catch {}
     set({ apiKey: key });
   }
 }));

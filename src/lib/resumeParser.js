@@ -3,12 +3,33 @@
  * Extracts comprehensive technical skills, specialized domains, tools, and experience level using Gemini
  */
 
+function getSafeApiKey(customKey = "") {
+  if (customKey) return customKey;
+  try {
+    if (typeof localStorage !== 'undefined') {
+      const stored = localStorage.getItem('gemini_api_key');
+      if (stored) return stored;
+    }
+  } catch {}
+  try {
+    if (typeof import.meta !== 'undefined' && import.meta.env) {
+      return import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY || "";
+    }
+  } catch {}
+  try {
+    if (typeof process !== 'undefined' && process.env) {
+      return process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || "";
+    }
+  } catch {}
+  return "";
+}
+
 export async function parseResumeWithGemini(resumeText, apiKey, pdfBase64 = null) {
   if (!pdfBase64 && (!resumeText || resumeText.trim().length < 20)) {
     throw new Error("Resume content is too short to analyze.");
   }
 
-  const effectiveKey = apiKey || import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY || '';
+  const effectiveKey = getSafeApiKey(apiKey);
 
   const instructions = `
 You are an expert technical evaluator, hiring committee member, and university capstone research advisor.

@@ -10,11 +10,32 @@ const GEMINI_MODELS = [
   "gemini-3.5-flash"
 ];
 
+function getSafeApiKey(customKey = "") {
+  if (customKey) return customKey;
+  try {
+    if (typeof localStorage !== 'undefined') {
+      const stored = localStorage.getItem('gemini_api_key');
+      if (stored) return stored;
+    }
+  } catch {}
+  try {
+    if (typeof import.meta !== 'undefined' && import.meta.env) {
+      return import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY || "";
+    }
+  } catch {}
+  try {
+    if (typeof process !== 'undefined' && process.env) {
+      return process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || "";
+    }
+  } catch {}
+  return "";
+}
+
 /**
  * Execute Gemini REST API call with automatic multi-model failover and retry
  */
 async function callGemini(apiKey, contents, systemInstruction = "", tools = [], jsonMode = false) {
-  const effectiveKey = apiKey || import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY || '';
+  const effectiveKey = getSafeApiKey(apiKey);
   if (!effectiveKey) {
     throw new Error("No Gemini API key provided. Please configure your key.");
   }
@@ -86,7 +107,7 @@ async function callGemini(apiKey, contents, systemInstruction = "", tools = [], 
  * Main Multi-Stage Discovery Pipeline — Live Real-Time Research Every Run
  */
 export async function discoverProjectOpportunities(profile, apiKey, addLog) {
-  const effectiveKey = apiKey || import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY || '';
+  const effectiveKey = getSafeApiKey(apiKey);
 
   // Stage 1: Profile & Capability Analysis
   addLog(

@@ -8,8 +8,29 @@ const GEMINI_MODELS = [
   "gemini-3.5-flash"
 ];
 
+function getSafeApiKey(customKey = "") {
+  if (customKey) return customKey;
+  try {
+    if (typeof localStorage !== 'undefined') {
+      const stored = localStorage.getItem('gemini_api_key');
+      if (stored) return stored;
+    }
+  } catch {}
+  try {
+    if (typeof import.meta !== 'undefined' && import.meta.env) {
+      return import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY || "";
+    }
+  } catch {}
+  try {
+    if (typeof process !== 'undefined' && process.env) {
+      return process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || "";
+    }
+  } catch {}
+  return "";
+}
+
 async function callGemini(contents, systemInstruction = "") {
-  const apiKey = localStorage.getItem('gemini_api_key') || import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY || "";
+  const apiKey = getSafeApiKey();
   if (!apiKey) {
     throw new Error("GEMINI_API_KEY not configured. Please enter your Gemini API key in settings.");
   }
