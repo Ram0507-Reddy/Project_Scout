@@ -235,18 +235,23 @@ Generate 6-8 tough, realistic viva interrogation questions derived directly from
  */
 export async function auditDocumentationGaps(projectContext, repoData) {
   const systemInstruction = `
-You are a Technical Documentation Specialist & Academic Reviewer.
-Audit the student's README and repository files against the standard 10-point Academic Capstone Documentation Checklist:
-1. Clear Problem Statement
-2. Objectives & Hypotheses
-3. System Architecture & Dataflow
-4. Installation & Environment Setup
-5. API Endpoints & Contract Specs
-6. Database Schema & Data Models
+You are a Lead Academic Documentation Reviewer & Technical Writer for Capstone Engineering Projects.
+Your task is to audit the student's actual GitHub repository README.md against their indexed file structure and dependencies using the standard 10-point Academic Capstone Documentation Checklist:
+1. Clear Problem Statement & Motivation
+2. Research Objectives & Hypotheses
+3. System Architecture & Component Dataflow
+4. Installation & Environment Setup (matching actual package.json / requirements.txt)
+5. API Endpoints & Interfaces
+6. Data Models, Schemas & State Management
 7. Baseline Comparison & Evaluation Metrics
 8. Automated Testing & Verification Steps
-9. Known Limitations & Edge Cases
-10. Literature Citations & Academic References
+9. Known Limitations, Failure Modes & Edge Cases
+10. Academic Citations & Literature References
+
+STRICT INSTRUCTIONS:
+- Ground your audit strictly in the provided README and the ACTUAL indexed file tree and dependencies of the repository.
+- Under "suggestedFix", reference what is missing based on their real files (e.g. if they have tests/ or src/lib/ but no test section in README).
+- Under "draftContent", generate ready-to-paste, high-quality markdown content written specifically for THIS project that they can directly insert into their README.md.
 
 Output strictly valid JSON matching this schema:
 {
@@ -265,10 +270,21 @@ Output strictly valid JSON matching this schema:
 `;
 
   const userPrompt = `
-Project Context: ${JSON.stringify(projectContext)}
-Repo Name: ${repoData.name}
-Current README:
-${repoData.readme || "NO README PRESENT"}
+=== CONNECTED GITHUB REPOSITORY DOCUMENTATION AUDIT ===
+Repository: ${repoData.owner || "local"}/${repoData.name}
+Repo URL: ${repoData.url || "N/A"}
+Indexed Repository Files (${repoData.fileTree?.length || 0} files):
+${JSON.stringify((repoData.fileTree || []).slice(0, 80), null, 2)}
+
+Active Dependencies:
+${JSON.stringify(repoData.dependencies || {}, null, 2)}
+
+Actual README.md Content to Audit:
+"""
+${repoData.readme || "NO README.md FOUND IN REPOSITORY"}
+"""
+
+Perform the rigorous 10-point academic documentation audit now.
 `;
 
   return await callGemini(

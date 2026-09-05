@@ -138,23 +138,31 @@ export const DocAuditorView = () => {
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-base font-extrabold text-zinc-900">Documentation Integrity Score</h3>
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-zinc-100 text-zinc-700 font-semibold">
-                10-Point Capstone Rubric
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-zinc-100 text-zinc-700 font-mono font-semibold">
+                {repoData ? `${repoData.owner}/${repoData.name}` : 'Manual README'}
               </span>
             </div>
             <p className="text-xs text-zinc-500 mt-0.5">
-              {checklist?.filter(c => c.status === 'PASS').length || 0} / {checklist?.length || 10} academic standards met.
+              {checklist?.filter(c => c.status === 'PASS').length || 0} / {checklist?.length || 10} academic standards met against live repository structure.
             </p>
           </div>
         </div>
 
-        <button
-          onClick={() => handleAuditDocs(isManualMode)}
-          className="px-4 py-2.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-bold flex items-center gap-1.5 transition-colors shrink-0 cursor-pointer"
-        >
-          <Sparkles className="w-3.5 h-3.5 text-[#FF5A43]" />
-          <span>Re-Audit README</span>
-        </button>
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            onClick={() => setRepoModalOpen(true)}
+            className="px-3.5 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-semibold transition-colors cursor-pointer"
+          >
+            Change Repo
+          </button>
+          <button
+            onClick={() => handleAuditDocs(isManualMode)}
+            className="px-4 py-2 rounded-xl btn-black text-white text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-[#2DD4BF]" />
+            <span>Re-Audit Live README</span>
+          </button>
+        </div>
       </div>
 
       {/* 10-Point Checklist Grid */}
