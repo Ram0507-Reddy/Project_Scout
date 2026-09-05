@@ -165,10 +165,19 @@ Conduct the technical and academic audit now. Be constructively rigorous.
  */
 export async function generateVivaDefenseSuite(projectContext, repoData, auditResults) {
   const systemInstruction = `
-You are an external university Viva Examiner known for asking tough, pinpoint technical and research methodology questions.
-Your goal is to prepare the student so they cannot be caught off-guard during their project defense.
+You are a senior university External Viva Examination Committee Chair and Principal Technical Architect.
+Your task is to interrogate the student directly on their ACTUAL GitHub repository, code structure, packages, and architecture.
 
-Generate personalized viva questions rooted directly in the vulnerabilities, missing documentation, architectural choices, and research gaps of their ACTUAL repository.
+STRICT INSTRUCTIONS:
+1. Every question MUST be grounded in a specific file, dependency, architectural pattern, or claim found in their repository.
+2. Under "codeOrFileAnchor", you MUST cite the exact file path from their repository (e.g., "src/lib/gemini.js", "package.json", "src/components/OpportunityCard.jsx", "README.md", etc.).
+3. Do NOT ask generic textbook questions. Interrogate real implementation decisions:
+   - Error handling & rate limiting in their API callers
+   - State management complexity & caching
+   - Missing unit tests & CI validation pipelines
+   - Performance bottlenecks, dataflow, or security hygiene
+   - Academic novelty vs. relying on existing off-the-shelf wrappers
+4. Provide a "dangerAnswer" (what an unprepared student would say that leads to failure) and an "idealDefenseStrategy" (how to defend the engineering choice with technical precision).
 
 Output strictly valid JSON matching this schema:
 {
@@ -194,14 +203,25 @@ Output strictly valid JSON matching this schema:
 `;
 
   const userPrompt = `
-Project Title/Problem: ${projectContext.problem || repoData.name}
+=== CONNECTED REPOSITORY UNDER EXAMINATION ===
+Repository: ${repoData.owner}/${repoData.name}
+Repo URL: ${repoData.url || "https://github.com/" + repoData.owner + "/" + repoData.name}
 Academic Level: ${projectContext.academicLevel || "UG"}
-Repo Files: ${JSON.stringify((repoData.fileTree || []).slice(0, 50))}
-Dependencies: ${JSON.stringify(repoData.dependencies || {})}
-README Snippet: ${(repoData.readme || "").slice(0, 1500)}
-Identified Audit Weaknesses: ${JSON.stringify(auditResults?.findings?.critical || [])}
+Total Indexed Code Files: ${repoData.fileTree?.length || 0}
 
-Generate 6-8 sharp, realistic viva examination questions tailored specifically to their codebase and research claims.
+Repository File Hierarchy:
+${JSON.stringify((repoData.fileTree || []).slice(0, 100), null, 2)}
+
+Active Dependencies & Libraries:
+${JSON.stringify(repoData.dependencies || {}, null, 2)}
+
+README.md Snippet:
+${(repoData.readme || "No README present").slice(0, 3000)}
+
+Audit Identified Risks:
+${JSON.stringify(auditResults?.findings?.critical || [])}
+
+Generate 6-8 tough, realistic viva interrogation questions derived directly from the code files and architecture listed above.
 `;
 
   return await callGemini(
