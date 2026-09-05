@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Python Virtual Environments & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+ENV/
+*.egg-info/
+.pytest_cache/
+
+# Production & Build outputs
+dist/
+build/
+out/
+.next/
+.cache/
+
+# Environment Variables & Secrets (CRITICAL: NEVER COMMIT API KEYS)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+
+# IDE & OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Large Binary files (Enforce <10MB Hackathon Rule)
+*.mp4
+*.zip
+*.tar.gz
+*.iso
+*.weights
+*.bin
+*.pt
+*.onnx
