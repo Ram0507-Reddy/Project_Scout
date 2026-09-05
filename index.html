@@ -1,17 +1,23 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><polygon points='16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76'/></svg>" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2318181B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><polygon points='16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76'/></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Project Scout — Universal Real-World Problem Discovery & Opportunity Engine</title>
-    <meta name="description" content="Discover evidence-backed, real-world problems tailored to your skills. Don't build generic ideas; solve real problems." />
-    <!-- Modern Typography: Plus Jakarta Sans & Space Grotesk -->
+    <title>Project Scout — AI Project Discovery, Repository Health & Viva Defense Engine</title>
+    <meta name="description" content="Stop building tutorial clones. Project Scout discovers evidence-grounded capstone problems, continuously audits your GitHub repository, and simulates viva defense examinations." />
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- PDF.js for fast in-browser resume extraction -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+      if (window.pdfjsLib) {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      }
+    </script>
   </head>
-  <body class="bg-[#090d16] text-slate-100 antialiased selection:bg-cyan-500/30 selection:text-cyan-200 overflow-x-hidden">
+  <body class="bg-[#FAF8F5] text-zinc-900 min-h-screen antialiased">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Send, Bot, User, Sparkles, Code2, ShieldAlert, Cpu, ArrowRight, CornerDownLeft } from 'lucide-react';
+import { X, Send, Bot, User, Sparkles, ArrowRight } from 'lucide-react';
 import { useAppStore } from '../lib/store';
 import { askMentor } from '../lib/gemini';
 import ReactMarkdown from 'react-markdown';
@@ -50,54 +50,52 @@ export default function MentorChatModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-end bg-black/70 backdrop-blur-md animate-fade-in">
-      <div className="w-full max-w-2xl h-full bg-[#090d16]/95 border-l border-white/10 shadow-2xl flex flex-col justify-between animate-slide-left">
+    <div className="fixed inset-0 z-50 flex items-center justify-end bg-black/50 backdrop-blur-sm animate-fade-in">
+      <div className="w-full max-w-2xl h-full bg-white border-l border-zinc-200 shadow-2xl flex flex-col justify-between animate-slide-left">
         
         {/* Chat Top Header */}
-        <div className="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between bg-slate-950/60">
+        <div className="p-5 border-b border-zinc-200 flex items-center justify-between bg-[#FAF8F5]">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 p-[1px] flex items-center justify-center glow-cyan shadow-md">
-              <div className="h-full w-full bg-[#090d16] rounded-[11px] flex items-center justify-center">
-                <Bot className="h-5 w-5 text-cyan-400" />
-              </div>
+            <div className="h-10 w-10 rounded-2xl bg-zinc-900 flex items-center justify-center text-[#2DD4BF] shadow-sm">
+              <Bot className="h-5 w-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-heading font-bold text-sm text-white">
+                <h3 className="font-bold text-sm text-zinc-900">
                   AI Engineering Mentor
                 </h3>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-100 text-emerald-800 font-bold">
                   Grounded in Project
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 truncate max-w-xs sm:max-w-md">
-                Mentoring: <span className="text-slate-200">{activeOpportunity.title}</span>
+              <p className="text-[11px] text-zinc-500 truncate max-w-xs sm:max-w-md">
+                Mentoring: <span className="text-zinc-800 font-medium">{activeOpportunity.title}</span>
               </p>
             </div>
           </div>
 
           <button
             onClick={() => setMentorOpen(false)}
-            className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white border border-white/10 transition-all"
+            className="p-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-zinc-500 hover:text-zinc-900 transition-all cursor-pointer"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
         {/* Chat Messages Body */}
-        <div className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4 text-xs">
+        <div className="flex-1 p-5 sm:p-6 overflow-y-auto space-y-4 text-xs bg-zinc-50/50">
           
           {/* Welcome Intro if empty */}
           {mentorMessages.length === 0 && (
-            <div className="p-5 rounded-2xl bg-slate-900/40 border border-white/5 space-y-3 animate-fade-in">
-              <div className="flex items-center gap-2 text-cyan-400 font-heading font-bold text-xs">
+            <div className="p-5 rounded-3xl bg-white border border-zinc-200 space-y-3 shadow-sm animate-fade-in">
+              <div className="flex items-center gap-2 text-[#FF5A43] font-bold text-xs">
                 <Sparkles className="h-4 w-4" />
                 <span>Project-Specific Mentorship Ready</span>
               </div>
-              <p className="text-slate-300 leading-relaxed text-xs">
+              <p className="text-zinc-600 leading-relaxed text-xs">
                 I am your dedicated senior engineering mentor for <strong>{activeOpportunity.title}</strong>. Ask me anything from system architecture, starter code in {activeOpportunity.studentOpportunity?.recommendedTechStack?.backend?.[0] || 'Python'}, dataset sources, to defense presentation prep.
               </p>
-              <div className="pt-2 text-[11px] text-slate-400">
+              <div className="pt-2 text-[11px] text-zinc-500 font-bold">
                 Tap any prompt below to get started:
               </div>
               <div className="flex flex-col gap-1.5 pt-1">
@@ -105,10 +103,10 @@ export default function MentorChatModal() {
                   <button
                     key={idx}
                     onClick={() => handleSend(qp)}
-                    className="text-left p-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-800 border border-white/5 text-slate-300 hover:text-white text-xs transition-all flex items-center justify-between group"
+                    className="text-left p-3 rounded-2xl bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-700 hover:text-zinc-900 text-xs transition-all flex items-center justify-between group cursor-pointer"
                   >
                     <span>{qp}</span>
-                    <ArrowRight className="h-3 w-3 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <ArrowRight className="h-3.5 w-3.5 text-zinc-400 group-hover:text-zinc-900 transition-colors" />
                   </button>
                 ))}
               </div>
@@ -122,15 +120,15 @@ export default function MentorChatModal() {
               className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
             >
               {msg.role !== 'user' && (
-                <div className="h-7 w-7 rounded-lg bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 flex items-center justify-center shrink-0 mt-0.5">
-                  <Bot className="h-3.5 w-3.5" />
+                <div className="h-8 w-8 rounded-xl bg-zinc-900 text-[#2DD4BF] flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
+                  <Bot className="h-4 w-4" />
                 </div>
               )}
               <div
                 className={`max-w-[85%] p-4 rounded-2xl text-xs sm:text-[13px] leading-relaxed ${
                   msg.role === 'user'
-                    ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-br-sm shadow-md'
-                    : 'bg-slate-900/80 border border-white/10 text-slate-200 rounded-bl-sm prose prose-invert max-w-none'
+                    ? 'bg-zinc-900 text-white rounded-br-sm shadow-sm'
+                    : 'bg-white border border-zinc-200 text-zinc-800 rounded-bl-sm shadow-sm prose max-w-none'
                 }`}
               >
                 {msg.role === 'user' ? (
@@ -145,23 +143,23 @@ export default function MentorChatModal() {
                 </div>
               </div>
               {msg.role === 'user' && (
-                <div className="h-7 w-7 rounded-lg bg-blue-600/30 border border-blue-400/30 text-blue-200 flex items-center justify-center shrink-0 mt-0.5">
-                  <User className="h-3.5 w-3.5" />
+                <div className="h-8 w-8 rounded-xl bg-zinc-200 text-zinc-700 flex items-center justify-center shrink-0 mt-0.5">
+                  <User className="h-4 w-4" />
                 </div>
               )}
             </div>
           ))}
 
           {isTyping && (
-            <div className="flex gap-3 justify-start items-center text-xs text-slate-400">
-              <div className="h-7 w-7 rounded-lg bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 flex items-center justify-center shrink-0">
-                <Bot className="h-3.5 w-3.5" />
+            <div className="flex gap-3 justify-start items-center text-xs text-zinc-500">
+              <div className="h-8 w-8 rounded-xl bg-zinc-900 text-[#2DD4BF] flex items-center justify-center shrink-0">
+                <Bot className="h-4 w-4" />
               </div>
-              <div className="flex items-center gap-1.5 p-3 rounded-2xl bg-slate-900 border border-white/5">
-                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-bounce" />
-                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-bounce [animation-delay:0.2s]" />
-                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-bounce [animation-delay:0.4s]" />
-                <span className="text-[11px] text-slate-400 ml-1">Mentor formulating answer...</span>
+              <div className="flex items-center gap-1.5 p-3 rounded-2xl bg-white border border-zinc-200 shadow-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#FF5A43] animate-bounce" />
+                <span className="h-1.5 w-1.5 rounded-full bg-[#FF5A43] animate-bounce [animation-delay:0.2s]" />
+                <span className="h-1.5 w-1.5 rounded-full bg-[#FF5A43] animate-bounce [animation-delay:0.4s]" />
+                <span className="text-[11px] text-zinc-500 ml-1 font-medium">Mentor formulating answer...</span>
               </div>
             </div>
           )}
@@ -170,7 +168,7 @@ export default function MentorChatModal() {
         </div>
 
         {/* Input Bar */}
-        <div className="p-4 border-t border-white/10 bg-slate-950/80">
+        <div className="p-4 border-t border-zinc-200 bg-white">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -182,15 +180,15 @@ export default function MentorChatModal() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask your mentor about architecture, code, or interview tips..."
-              className="flex-1 px-4 py-3 rounded-2xl bg-slate-900 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/50"
+              placeholder="Ask your mentor about architecture, code, or viva tips..."
+              className="flex-1 px-4 py-3 rounded-2xl bg-zinc-50 border border-zinc-300 text-xs text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-zinc-900"
             />
             <button
               type="submit"
               disabled={!input.trim() || isTyping}
-              className="p-3 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:opacity-90 transition-all shadow-md glow-cyan disabled:opacity-40 cursor-pointer"
+              className="p-3 rounded-2xl btn-black text-white transition-all shadow-sm disabled:opacity-40 cursor-pointer"
             >
-              <Send className="h-4 w-4" />
+              <Send className="h-4 w-4 text-[#2DD4BF]" />
             </button>
           </form>
         </div>
