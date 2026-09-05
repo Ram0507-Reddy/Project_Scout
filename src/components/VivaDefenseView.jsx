@@ -124,6 +124,13 @@ export const VivaDefenseView = () => {
               <span className="text-xs px-2.5 py-0.5 rounded-full bg-zinc-100 text-zinc-700 font-mono font-semibold">
                 {repoData.owner}/{repoData.name}
               </span>
+              <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                vivaData?.isFallback 
+                  ? 'bg-zinc-100 text-zinc-600 border border-zinc-200' 
+                  : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+              }`}>
+                {vivaData?.isFallback ? 'Deterministic Code Interrogation' : 'Live Gemini 3.7 Committee'}
+              </span>
             </div>
             <p className="text-xs text-zinc-500 mt-0.5">
               {vivaReadinessScore >= 75 ? 'Strong technical defense readiness. Review file-specific questions below.' : 'High risk of examiner pushback on architectural decisions and missing documentation.'}

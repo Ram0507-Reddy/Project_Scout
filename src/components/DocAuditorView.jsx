@@ -141,6 +141,13 @@ export const DocAuditorView = () => {
               <span className="text-xs px-2.5 py-0.5 rounded-full bg-zinc-100 text-zinc-700 font-mono font-semibold">
                 {repoData ? `${repoData.owner}/${repoData.name}` : 'Manual README'}
               </span>
+              <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                docAuditData?.isFallback 
+                  ? 'bg-zinc-100 text-zinc-600 border border-zinc-200' 
+                  : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+              }`}>
+                {docAuditData?.isFallback ? 'Deterministic Doc Rubric' : 'Live Gemini 3.7 Auditor'}
+              </span>
             </div>
             <p className="text-xs text-zinc-500 mt-0.5">
               {checklist?.filter(c => c.status === 'PASS').length || 0} / {checklist?.length || 10} academic standards met against live repository structure.

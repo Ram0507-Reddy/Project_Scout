@@ -48,6 +48,13 @@ export const ProjectHealthView = () => {
               <span className="text-xs font-bold text-[#FF5A43] uppercase tracking-wider">
                 Mentor Challenge & Rigor Alert
               </span>
+              <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                auditResults?.isFallback 
+                  ? 'bg-zinc-100 text-zinc-600 border border-zinc-200' 
+                  : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+              }`}>
+                {auditResults?.isFallback ? 'Deterministic Code Analysis' : 'Live Gemini 3.7 Intelligence'}
+              </span>
             </div>
             <p className="text-sm font-bold text-zinc-900">
               {mentorChallenge.issue}
